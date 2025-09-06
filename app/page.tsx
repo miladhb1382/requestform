@@ -162,7 +162,7 @@ export default function Home() {
       {/* Engineer login modal */}
       {showEngineerLogin && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white z-100 rounded-2xl p-6 w-full max-w-md mx-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
             <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">
               ورود مهندس
             </h2>
@@ -290,7 +290,7 @@ export default function Home() {
       )}
 
       {/* Buttons */}
-      <div className="absolute top-4 left-4 flex flex-col gap-2">
+      <div className="absolute top-4 left-4 flex z-100 flex-col gap-2">
         <button
           onClick={() => setShowEngineerLogin(true)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
@@ -410,7 +410,7 @@ export default function Home() {
                 placeholder={
                   formalMode
                     ? "ضمن احترام، بدین وسیله درخواست خود را به شرح ذیل ارائه می‌نماید..."
-                    : "اینجا یه متن فان بنویس..."
+                    : "اینجا متن درخواست بنویس..."
                 }
                 rows={4}
                 name="body"
