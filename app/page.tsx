@@ -25,6 +25,38 @@ export default function Home() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
 
+  // داده‌های فیک برای درخواست‌ها
+  const fakeRequests: Request[] = [
+    {
+      id: 1,
+      title: "درخواست 10 عدد بوس",
+      content: "تقاضا داریم ده عدد بوس به میلاد بدید",
+      status: "pending",
+      createdAt: new Date(2023, 9, 15, 14, 30).toISOString(),
+    },
+    {
+      id: 2,
+      title: "درخواست مرخصی",
+      content: "با احترام، خواهشمندم مرخصی یک روزه من را تایید فرمایید.",
+      status: "approved",
+      createdAt: new Date(2023, 9, 10, 9, 15).toISOString(),
+    },
+    {
+      id: 3,
+      title: "درخواست نابودی لاهیجان",
+      content: "ایا به مدت 10 روز برده میلد همیشه بهار می شوی؟",
+      status: "rejected",
+      createdAt: new Date(2023, 9, 5, 16, 45).toISOString(),
+    },
+  ];
+
+  useEffect(() => {
+    // بارگذاری داده‌های فیک هنگام اولین رندر
+    if (requests.length === 0) {
+      setRequests(fakeRequests);
+    }
+  }, []);
+
   useEffect(() => {
     if (submitted && !formalMode) {
       const interval = setInterval(() => {
@@ -52,11 +84,9 @@ export default function Home() {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch("/api/requests");
-      if (response.ok) {
-        const data = await response.json();
-        setRequests(data);
-      }
+      // در حالت واقعی اینجا درخواست به API زده می‌شود
+      // اما در این نسخه از داده‌های فیک استفاده می‌کنیم
+      setRequests(fakeRequests);
     } catch (error) {
       console.error("خطا در دریافت درخواست‌ها:", error);
     }
@@ -66,20 +96,34 @@ export default function Home() {
     e.preventDefault();
     if (title.trim() && body.trim()) {
       try {
-        const response = await fetch("/api/requests", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ title, content: body }),
-        });
+        // ایجاد یک درخواست جدید
+        const newRequest: Request = {
+          id: Date.now(), // استفاده از timestamp به عنوان ID
+          title,
+          content: body,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+        };
 
-        if (response.ok) {
-          setSubmitted(true);
-          if (isAdmin) {
-            fetchRequests();
-          }
-        }
+        // افزودن درخواست جدید به لیست
+        setRequests((prev) => [newRequest, ...prev]);
+        setSubmitted(true);
+
+        // در حالت واقعی اینجا درخواست به API ارسال می‌شود
+        // const response = await fetch("/api/requests", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({ title, content: body }),
+        // });
+
+        // if (response.ok) {
+        //   setSubmitted(true);
+        //   if (isAdmin) {
+        //     fetchRequests();
+        //   }
+        // }
       } catch (error) {
         console.error("خطا در ارسال درخواست:", error);
         alert("خطا در ارسال درخواست. لطفاً دوباره تلاش کنید.");
@@ -114,17 +158,25 @@ export default function Home() {
 
   const handleStatusUpdate = async (id: number, status: string) => {
     try {
-      const response = await fetch(`/api/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
+      // به‌روزرسانی وضعیت درخواست
+      setRequests((prev) =>
+        prev.map((request) =>
+          request.id === id ? { ...request, status } : request
+        )
+      );
 
-      if (response.ok) {
-        fetchRequests();
-      }
+      // در حالت واقعی اینجا درخواست به API ارسال می‌شود
+      // const response = await fetch(`/api/${id}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ status }),
+      // });
+
+      // if (response.ok) {
+      //   fetchRequests();
+      // }
     } catch (error) {
       console.error("خطا در به‌روزرسانی وضعیت:", error);
     }
