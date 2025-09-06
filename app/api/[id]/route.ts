@@ -1,18 +1,19 @@
 // app/api/requests/[id]/route.ts
+
 import { prisma } from "@/app/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT - به‌روزرسانی وضعیت درخواست
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> } // توجه: الان Promise هست
 ) {
   try {
+    const { id } = await context.params; // اینجا await بزن
     const { status } = await request.json();
-    const id = parseInt(params.id);
 
     const updatedRequest = await prisma.request.update({
-      where: { id },
+      where: { id: Number(id) },
       data: { status },
     });
 
