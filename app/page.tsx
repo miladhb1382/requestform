@@ -377,9 +377,7 @@ export default function Home() {
                     : "border-pink-300 focus:ring-pink-400"
                 }`}
                 placeholder={
-                  formalMode
-                    ? "درخواست رسمی برای همکاری"
-                    : "مثلاً: درخواست عضویت در باشگاه دوشیزه‌ها"
+                  formalMode ? "درخواست رسمی برای همکاری" : "درخواست بیرون رفتن"
                 }
                 type="text"
                 name="title"
